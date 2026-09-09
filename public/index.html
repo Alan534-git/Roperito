@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Roperito Solidario: doná, encontrá y solicitá prendas en tu escuela.">
+  <title>Roperito Solidario</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script type="module" src="/js/app.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="#catalogo"><span class="brand-mark">RS</span><span>Roperito<br><strong>Solidario</strong></span></a>
+    <nav aria-label="Navegación principal"><a href="#catalogo">Stock</a><a href="#como-ayudar">Cómo ayudar</a><button class="button button-ghost" id="open-login">Ingresar</button><button class="button button-dark hidden" id="logout">Salir</button></nav>
+  </header>
+  <main>
+    <section class="hero">
+      <div class="hero-copy"><p class="eyebrow">E.E.S.T N°1 · Raúl Scalabrini Ortiz</p><h1>Lo que ya no usás puede abrigar a alguien.</h1><p class="lead">Un espacio simple para compartir prendas entre estudiantes, con cuidado, respeto y ayuda concreta.</p><a class="button button-accent" href="#catalogo">Ver prendas disponibles <span>↓</span></a></div>
+      <div class="hero-note"><span class="note-number">01</span><p>Donar también es una forma de acompañar.</p><span class="note-line"></span></div>
+    </section>
+    <section class="section" id="catalogo"><div class="section-heading"><div><p class="eyebrow">El stock de hoy</p><h2>Elegí lo que necesitás</h2></div><p class="section-intro">Prendas revisadas y listas para encontrar una nueva historia.</p></div><div class="filters"><label>Buscar <input id="search" type="search" placeholder="Remera, campera..."></label><label>Categoría <select id="category"><option value="">Todas</option><option>remera</option><option>campera</option><option>pantalón</option><option>calzado</option><option>abrigo</option></select></label></div><div class="catalog" id="catalog"></div><p class="empty hidden" id="empty">No encontramos prendas con esos filtros.</p></section>
+    <section class="help-band" id="como-ayudar"><div><p class="eyebrow">Una red que se mueve</p><h2>¿Tenés ropa en buen estado?</h2></div><p>El panel de administración permite sumar prendas al stock para que lleguen a quien las necesita.</p><button class="button button-light" id="open-admin">Cargar una donación</button></section>
+    <section class="admin-panel hidden" id="admin-panel"><div class="section-heading"><div><p class="eyebrow">Panel de administración</p><h2>Sumar una prenda</h2></div></div><form id="garment-form" class="form-grid" enctype="multipart/form-data"><label>Nombre<input name="nombre" required maxlength="120" placeholder="Campera de abrigo"></label><label>Categoría<input name="categoria" required maxlength="80" placeholder="campera"></label><label>Talle<input name="talle" required maxlength="30" placeholder="M"></label><label>Estado<select name="estado"><option value="nuevo">Nuevo</option><option value="muy_bueno">Muy bueno</option><option value="bueno" selected>Bueno</option><option value="a_reparar">A reparar</option></select></label><label class="file-field">Foto de la prenda<input name="imagen" type="file" accept="image/jpeg,image/png,image/webp"></label><button class="button button-accent" type="submit">Agregar al stock</button></form><div id="requests"></div></section>
+  </main>
+  <footer><span>Roperito Solidario</span><span>E.E.S.T N°1 · Hecho para compartir</span></footer>
+  <dialog id="auth-dialog"><button class="dialog-close" id="close-login" aria-label="Cerrar">×</button><p class="eyebrow">Tu espacio</p><h2 id="auth-title">Ingresar</h2><form id="auth-form"><label id="name-field" class="hidden">Nombre<input name="nombre" minlength="2" maxlength="120"></label><label>Email<input name="email" type="email" required></label><label>Contraseña<input name="password" type="password" minlength="8" required></label><button class="button button-dark" type="submit" id="auth-submit">Ingresar</button></form><button class="text-button" id="toggle-auth">¿Todavía no tenés cuenta? Registrate</button><p class="form-message" id="auth-message"></p></dialog><div class="toast" id="toast" role="status"></div>
+</body>
+</html>
