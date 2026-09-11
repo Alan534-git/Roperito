@@ -1,12 +1,14 @@
 import { Router } from 'express';
 import bcrypt from 'bcrypt';
+import rateLimit from 'express-rate-limit';
 import type { ResultSetHeader, RowDataPacket } from 'mysql2/promise';
 import { z } from 'zod';
 import { pool } from '../db';
-import { authenticate, clearAuthCookie, issueAuthCookie } from '../middleware/auth';
+import { authenticate, clearAuthCookie, issueAuthCookie, optionalAuthenticate } from '../middleware/auth';
 import type { AuthRequest } from '../types';
 
 const router = Router();
+const authAttemptLimiter = rateLimit({ windowMs: 15 * 60 * 1000, limit: 10, standardHeaders: 'draft-8', legacyHeaders: false, message: { error: 'Demasiados intentos. Esperá unos minutos y probá nuevamente.' } });
 const credentials = z.object({
   nombre: z.string().trim().min(2).max(120),
   email: z.string().trim().email().max(190).transform((value) => value.toLowerCase()),
@@ -14,7 +16,7 @@ const credentials = z.object({
 });
 const loginCredentials = credentials.pick({ email: true, password: true });
 
-router.post('/register', async (request, response, next) => {
+router.post('/register', authAttemptLimiter, async (request, response, next) => {
   try {
     const data = credentials.parse(request.body);
     const passwordHash = await bcrypt.hash(data.password, 12);
@@ -32,7 +34,7 @@ router.post('/register', async (request, response, next) => {
   }
 });
 
-router.post('/login', async (request, response, next) => {
+router.post('/login', authAttemptLimiter, async (request, response, next) => {
   try {
     const data = loginCredentials.parse(request.body);
     const [rows] = await pool.execute<RowDataPacket[]>(
@@ -53,6 +55,6 @@ router.post('/login', async (request, response, next) => {
 });
 
 router.post('/logout', (_request, response) => { clearAuthCookie(response); response.status(204).send(); });
-router.get('/me', authenticate, (request: AuthRequest, response) => response.json({ user: request.user }));
+router.get('/me', optionalAuthenticate, (request: AuthRequest, response) => response.json({ user: request.user ?? null }));
 
 export default router;

@@ -21,11 +21,16 @@ router.patch('/solicitudes/:id', async (request, response, next) => {
     if (!['pendiente', 'aprobada', 'rechazada'].includes(state)) { response.status(400).json({ error: 'Estado inválido.' }); return; }
     const requestId = z.coerce.number().int().positive().parse(request.params.id);
     await connection.beginTransaction();
+    const [selected] = await connection.execute<RowDataPacket[]>('SELECT prenda_id, estado FROM solicitudes WHERE id = ? FOR UPDATE', [requestId]);
+    if (!selected.length) { await connection.rollback(); response.status(404).json({ error: 'Solicitud no encontrada.' }); return; }
+    const garmentId = selected[0].prenda_id as number;
+    if (state === 'aprobada') {
+      const [garments] = await connection.execute<RowDataPacket[]>('SELECT disponible FROM prendas WHERE id = ? FOR UPDATE', [garmentId]);
+      if (!garments[0]?.disponible && selected[0].estado !== 'aprobada') { await connection.rollback(); response.status(409).json({ error: 'La prenda ya no está disponible.' }); return; }
+    }
     const [result] = await connection.execute<ResultSetHeader>('UPDATE solicitudes SET estado = ? WHERE id = ?', [state, requestId]);
     if (!result.affectedRows) { await connection.rollback(); response.status(404).json({ error: 'Solicitud no encontrada.' }); return; }
     if (state === 'aprobada') {
-      const [selected] = await connection.execute<RowDataPacket[]>('SELECT prenda_id FROM solicitudes WHERE id = ?', [requestId]);
-      const garmentId = selected[0]?.prenda_id;
       await connection.execute('UPDATE prendas SET disponible = FALSE WHERE id = ?', [garmentId]);
       await connection.execute('UPDATE solicitudes SET estado = \'rechazada\' WHERE prenda_id = ? AND id <> ? AND estado = \'pendiente\'', [garmentId, requestId]);
     }

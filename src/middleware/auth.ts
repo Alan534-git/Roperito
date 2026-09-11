@@ -1,7 +1,9 @@
 import type { NextFunction, Response } from 'express';
 import jwt from 'jsonwebtoken';
+import type { RowDataPacket } from 'mysql2/promise';
 import type { AuthRequest, AuthUser } from '../types';
 import { config } from '../config';
+import { pool } from '../db';
 
 const COOKIE_NAME = 'roperito_token';
 
@@ -35,10 +37,21 @@ export function authenticate(request: AuthRequest, response: Response, next: Nex
   }
 }
 
-export function requireAdmin(request: AuthRequest, response: Response, next: NextFunction): void {
-  if (request.user?.rol !== 'admin') {
-    response.status(403).json({ error: 'Esta acción requiere permisos de administrador.' });
-    return;
-  }
+export function optionalAuthenticate(request: AuthRequest, response: Response, next: NextFunction): void {
+  const token = request.cookies[COOKIE_NAME] as string | undefined;
+  if (!token) { next(); return; }
+  try { request.user = jwt.verify(token, config.jwtSecret) as AuthUser; } catch { clearAuthCookie(response); }
   next();
+}
+
+export async function requireAdmin(request: AuthRequest, response: Response, next: NextFunction): Promise<void> {
+  try {
+    const [rows] = await pool.execute<RowDataPacket[]>('SELECT rol FROM usuarios WHERE id = ? LIMIT 1', [request.user!.id]);
+    const role = rows[0]?.rol as string | undefined;
+    if (role !== 'admin') {
+      response.status(403).json({ error: 'Esta acción requiere permisos de administrador.' });
+      return;
+    }
+    next();
+  } catch (error) { next(error); }
 }

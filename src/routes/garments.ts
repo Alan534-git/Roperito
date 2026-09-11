@@ -1,9 +1,12 @@
 import { Router } from 'express';
+import fs from 'node:fs';
+import path from 'node:path';
 import type { ResultSetHeader } from 'mysql2/promise';
 import { z } from 'zod';
+import { config } from '../config';
 import { pool } from '../db';
 import { authenticate, requireAdmin } from '../middleware/auth';
-import { uploadImage } from '../middleware/upload';
+import { isSupportedImage, saveUploadedImage, uploadImage } from '../middleware/upload';
 import type { AuthRequest } from '../types';
 
 const router = Router();
@@ -22,15 +25,18 @@ router.get('/', async (_request, response, next) => {
 });
 
 router.post('/', authenticate, requireAdmin, uploadImage, async (request: AuthRequest, response, next) => {
+  let imagePath: string | null = null;
   try {
     const data = garmentData.parse(request.body);
-    const imagePath = request.file ? `/uploads/${request.file.filename}` : null;
+    if (request.file && !isSupportedImage(request.file.buffer)) { response.status(400).json({ error: 'El archivo no contiene una imagen válida.' }); return; }
+    imagePath = request.file ? await saveUploadedImage(request.file) : null;
     const [result] = await pool.execute<ResultSetHeader>(
       'INSERT INTO prendas (nombre, categoria, talle, estado, ruta_imagen) VALUES (?, ?, ?, ?, ?)',
       [data.nombre, data.categoria, data.talle, data.estado, imagePath]
     );
     response.status(201).json({ id: result.insertId, message: 'Prenda agregada al stock.' });
   } catch (error) {
+    if (imagePath) { try { await fs.promises.unlink(path.resolve(config.uploadDir, imagePath.replace('/uploads/', ''))); } catch {} }
     if (error instanceof z.ZodError) response.status(400).json({ error: 'Completa correctamente las especificaciones.' });
     else next(error);
   }

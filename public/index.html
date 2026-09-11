@@ -6,23 +6,101 @@
   <meta name="description" content="Roperito Solidario: doná, encontrá y solicitá prendas en tu escuela.">
   <title>Roperito Solidario</title>
   <link rel="stylesheet" href="/styles.css">
+  <style>
+    @media (min-width: 1400px) {
+      .site-header { padding-left: 6vw; padding-right: 6vw; }
+      .hero, .section, .admin-panel, .help-band { padding-left: 12vw; padding-right: 12vw; }
+      .hero { grid-template-columns: minmax(0, 1fr) minmax(480px, 600px); gap: 9vw; }
+      .hero h1 { max-width: 900px; }
+      .catalog { grid-template-columns: repeat(4, 1fr); }
+    }
+    @media (max-width: 900px) {
+      .site-header { padding-left: max(20px, 5vw); padding-right: max(20px, 5vw); }
+      .hero, .section, .admin-panel, .help-band { padding-left: max(20px, 7vw); padding-right: max(20px, 7vw); }
+      .hero-art { max-width: 100%; }
+      .help-band .button { justify-self: start; }
+    }
+    @media (max-width: 560px) {
+      body { font-size: 13px; }
+      .site-header { padding: 12px 16px; }
+      .brand { gap: 9px; font-size: 9px; }
+      .brand-mark { width: 38px; height: 38px; }
+      .site-header nav { gap: 8px; }
+      .site-header nav .button { min-height: 40px; padding: 0 12px; font-size: 10px; }
+      .hero { padding: 48px 16px 54px; gap: 36px; min-height: 0; }
+      .hero h1 { font-size: clamp(43px, 14vw, 58px); letter-spacing: -.08em; line-height: .93; margin-bottom: 25px; }
+      .hero .lead { font-size: 13px; line-height: 1.65; }
+      .hero-art { height: calc(100vw - 32px); min-height: 300px; max-height: 430px; padding: 8px; }
+      .hero-art:before { inset: 8px; }
+      .art-label-top { left: 21px; top: 19px; }
+      .art-caption { left: 21px; right: 21px; bottom: 18px; font-size: 9px; }
+      .art-stamp { right: 19px; bottom: 40px; width: 64px; height: 64px; font-size: 10px; }
+      .ticker { font-size: 11px; padding: 11px 0; }
+      .section, .admin-panel { padding: 62px 16px; }
+      .section-heading { margin-bottom: 32px; }
+      .section h2, .admin-panel h2 { font-size: 36px; }
+      .filters { padding-top: 16px; }
+      .catalog { gap: 14px; }
+      .garment { min-height: 350px; }
+      .garment-image { height: 190px; }
+      .garment-info { padding: 16px; }
+      .garment-title { font-size: 19px; }
+      .help-band { padding: 58px 16px; gap: 25px; }
+      .help-band h2 { font-size: 32px; }
+      .help-band .button { width: 100%; }
+      .form-grid { gap: 17px; }
+      .form-grid .button { width: 100%; }
+      .request-row { display: grid; grid-template-columns: 1fr auto; align-items: start; }
+      .request-row select { max-width: 130px; }
+      footer { padding: 24px 16px; }
+      dialog { padding: 30px 22px; width: calc(100vw - 28px); max-height: calc(100dvh - 28px); overflow: auto; box-shadow: 7px 7px 0 var(--coral); }
+      .auth-dialog h2 { font-size: 32px; }
+      .dialog-close { right: 12px; top: 7px; }
+    }
+    @media (max-width: 360px) {
+      .site-header nav .button { padding: 0 9px; }
+      .brand span:last-child { display: none; }
+      .hero h1 { font-size: 43px; }
+      .hero-art { min-height: 270px; }
+      .art-stamp { width: 56px; height: 56px; font-size: 9px; }
+      .art-caption span:first-child { max-width: 150px; }
+      .section h2, .admin-panel h2 { font-size: 32px; }
+      .garment-image { height: 170px; }
+      .garment-meta { display: grid; gap: 5px; }
+      .request-row { grid-template-columns: 1fr; }
+      .request-row select { max-width: none; width: 100%; }
+    }
+    @media (max-height: 620px) and (orientation: landscape) {
+      .site-header { padding-top: 9px; padding-bottom: 9px; }
+      .hero { grid-template-columns: minmax(0, 1fr) minmax(260px, 38vw); min-height: 0; padding-top: 35px; padding-bottom: 35px; gap: 5vw; }
+      .hero h1 { font-size: clamp(38px, 7vw, 66px); }
+      .hero-art { height: calc(100vh - 120px); min-height: 280px; }
+      .ticker { display: none; }
+    }
+    body.theme-dark{--ink:#f4f1eb;--paper:#151715;--cream:#232622;--line:#464b43;--muted:#a7ada1}body.theme-dark:before{opacity:.14}body.theme-dark .site-header{background:rgba(21,23,21,.88)}body.theme-dark .garment{background:#20231f}body.theme-dark .garment-image{background:#2b302a}body.theme-dark .filters input,body.theme-dark .filters select,body.theme-dark .form-grid input,body.theme-dark .form-grid select,body.theme-dark .auth-dialog input{background:rgba(255,255,255,.06);color:var(--ink)}body.theme-dark .button-ghost{border-color:var(--ink)}body.theme-dark .password-control{background:#20231f;border-color:var(--line)}body.theme-dark dialog{background:var(--paper)}
+    .hero-image{position:absolute;inset:12px;overflow:hidden;background:#e6533d;background-image:linear-gradient(125deg,transparent 0 30%,rgba(23,24,22,.9) 30% 54%,transparent 54%),linear-gradient(35deg,#d4eb70 0 18%,transparent 18% 70%,#f4f1eb 70%)}.hero-image:before{content:'';position:absolute;width:46%;height:120%;left:23%;top:-10%;background:repeating-linear-gradient(90deg,rgba(23,24,22,.16) 0 2px,transparent 2px 12px);transform:rotate(18deg)}.hero-image:after{content:'RS';position:absolute;right:11%;top:18%;color:rgba(244,241,235,.9);font:800 clamp(70px,12vw,160px)/1 var(--display);letter-spacing:-.12em}.fabric-shape{position:absolute;display:block;border:1px solid rgba(244,241,235,.5);z-index:1}.fabric-shape-one{width:34%;height:58%;left:8%;bottom:-8%;background:#171816;transform:rotate(-14deg)}.fabric-shape-two{width:31%;height:48%;right:8%;top:4%;background:#d4eb70;transform:rotate(16deg)}.fabric-shape-three{width:28%;height:24%;right:18%;bottom:13%;background:#f4f1eb;transform:rotate(-8deg)}
+    :root{--coral:#b93828;--display:'Trebuchet MS','Segoe UI',sans-serif;--mono:'Cascadia Mono','Segoe UI Mono',Consolas,monospace}body.theme-dark{--coral:#ff927d}body.theme-dark .button-accent,body.theme-dark .button-dark,body.theme-dark .button-light{color:#171816}body.theme-dark .button-ghost{color:var(--ink)!important}body.theme-dark .help-band{background:#0d0f0d;color:#f4f1eb}body.theme-dark .brand-mark{background:#f4f1eb;color:#171816}
+    .theme-toggle{display:inline-flex;align-items:center;gap:7px;padding:8px 10px;border:1px solid var(--line);background:transparent;color:var(--ink);font-size:10px;text-transform:uppercase;letter-spacing:.06em}.theme-icon{font-size:16px;line-height:1}.theme-toggle:hover{border-color:var(--coral);color:var(--coral)}
+    :focus-visible{outline:3px solid var(--coral);outline-offset:3px}@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}@media(forced-colors:active){.button,.theme-toggle{border:1px solid ButtonText}.hero-art{border:1px solid CanvasText}.garment{border:1px solid CanvasText}}
+  </style>
   <script type="module" src="/js/app.js" defer></script>
 </head>
 <body>
   <header class="site-header">
     <a class="brand" href="#catalogo"><span class="brand-mark">RS</span><span>Roperito<br><strong>Solidario</strong></span></a>
-    <nav aria-label="Navegación principal"><a href="#catalogo">Stock</a><a href="#como-ayudar">Cómo ayudar</a><button class="button button-ghost" id="open-login">Ingresar</button><button class="button button-dark hidden" id="logout">Salir</button></nav>
+    <nav aria-label="Navegación principal"><a href="#catalogo">Stock</a><a href="#como-ayudar">Cómo ayudar</a><button class="theme-toggle" id="theme-toggle" type="button" aria-label="Activar modo oscuro" aria-pressed="false"><span class="theme-icon" id="theme-icon" aria-hidden="true">☼</span><span class="theme-label" id="theme-label">Modo claro</span></button><button class="button button-ghost" id="open-login">Ingresar</button><button class="button button-dark hidden" id="logout">Salir</button></nav>
   </header>
   <main>
     <section class="hero">
-      <div class="hero-copy"><p class="eyebrow">E.E.S.T N°1 · Raúl Scalabrini Ortiz</p><h1>Lo que ya no usás puede abrigar a alguien.</h1><p class="lead">Un espacio simple para compartir prendas entre estudiantes, con cuidado, respeto y ayuda concreta.</p><a class="button button-accent" href="#catalogo">Ver prendas disponibles <span>↓</span></a></div>
-      <div class="hero-note"><span class="note-number">01</span><p>Donar también es una forma de acompañar.</p><span class="note-line"></span></div>
+      <div class="hero-copy"><p class="eyebrow">E.E.S.T N°1 · Raúl Scalabrini Ortiz</p><h1>Vestirnos también es <em>cuidarnos.</em></h1><p class="lead">Prendas que circulan entre estudiantes para que lo que sobra encuentre a quien lo necesita.</p><a class="button button-accent" href="#catalogo">Explorar el stock <span>↘</span></a></div>
+      <div class="hero-art"><div class="art-label art-label-top">Roperito<br><strong>01 — 26</strong></div><div class="hero-image" role="img" aria-label="Prendas listas para compartir"><span class="fabric-shape fabric-shape-one"></span><span class="fabric-shape fabric-shape-two"></span><span class="fabric-shape fabric-shape-three"></span></div><div class="art-stamp">para<br>compartir</div><div class="art-caption"><span>Prendas con otra historia</span><span>↓</span></div></div>
     </section>
+    <div class="ticker" aria-label="Mensaje del roperito"><div>DONAR <span>•</span> ELEGIR <span>•</span> ACOMPAÑAR <span>•</span> DONAR <span>•</span> ELEGIR <span>•</span> ACOMPAÑAR <span>•</span></div></div>
     <section class="section" id="catalogo"><div class="section-heading"><div><p class="eyebrow">El stock de hoy</p><h2>Elegí lo que necesitás</h2></div><p class="section-intro">Prendas revisadas y listas para encontrar una nueva historia.</p></div><div class="filters"><label>Buscar <input id="search" type="search" placeholder="Remera, campera..."></label><label>Categoría <select id="category"><option value="">Todas</option><option>remera</option><option>campera</option><option>pantalón</option><option>calzado</option><option>abrigo</option></select></label></div><div class="catalog" id="catalog"></div><p class="empty hidden" id="empty">No encontramos prendas con esos filtros.</p></section>
     <section class="help-band" id="como-ayudar"><div><p class="eyebrow">Una red que se mueve</p><h2>¿Tenés ropa en buen estado?</h2></div><p>El panel de administración permite sumar prendas al stock para que lleguen a quien las necesita.</p><button class="button button-light" id="open-admin">Cargar una donación</button></section>
     <section class="admin-panel hidden" id="admin-panel"><div class="section-heading"><div><p class="eyebrow">Panel de administración</p><h2>Sumar una prenda</h2></div></div><form id="garment-form" class="form-grid" enctype="multipart/form-data"><label>Nombre<input name="nombre" required maxlength="120" placeholder="Campera de abrigo"></label><label>Categoría<input name="categoria" required maxlength="80" placeholder="campera"></label><label>Talle<input name="talle" required maxlength="30" placeholder="M"></label><label>Estado<select name="estado"><option value="nuevo">Nuevo</option><option value="muy_bueno">Muy bueno</option><option value="bueno" selected>Bueno</option><option value="a_reparar">A reparar</option></select></label><label class="file-field">Foto de la prenda<input name="imagen" type="file" accept="image/jpeg,image/png,image/webp"></label><button class="button button-accent" type="submit">Agregar al stock</button></form><div id="requests"></div></section>
   </main>
   <footer><span>Roperito Solidario</span><span>E.E.S.T N°1 · Hecho para compartir</span></footer>
-  <dialog id="auth-dialog"><button class="dialog-close" id="close-login" aria-label="Cerrar">×</button><p class="eyebrow">Tu espacio</p><h2 id="auth-title">Ingresar</h2><form id="auth-form"><label id="name-field" class="hidden">Nombre<input name="nombre" minlength="2" maxlength="120"></label><label>Email<input name="email" type="email" required></label><label>Contraseña<input name="password" type="password" minlength="8" required></label><button class="button button-dark" type="submit" id="auth-submit">Ingresar</button></form><button class="text-button" id="toggle-auth">¿Todavía no tenés cuenta? Registrate</button><p class="form-message" id="auth-message"></p></dialog><div class="toast" id="toast" role="status"></div>
+  <dialog class="auth-dialog" id="auth-dialog" aria-labelledby="auth-title" aria-describedby="auth-description"><button class="dialog-close" id="close-login" type="button" aria-label="Cerrar">×</button><p class="eyebrow">Tu espacio</p><h2 id="auth-title">Ingresar</h2><p class="auth-description" id="auth-description">Accedé para solicitar prendas y seguir tus pedidos.</p><form id="auth-form"><label id="name-field" class="hidden">Nombre<input name="nombre" autocomplete="name" minlength="2" maxlength="120"></label><label>Email<input name="email" type="email" autocomplete="email" required></label><label>Contraseña<div class="password-control"><input id="auth-password" name="password" type="password" autocomplete="current-password" minlength="8" required><button class="password-toggle" id="toggle-password" type="button" aria-controls="auth-password" aria-pressed="false">Mostrar</button></div></label><button class="button button-dark auth-submit" type="submit" id="auth-submit">Ingresar</button></form><button class="text-button" id="toggle-auth" type="button">¿Todavía no tenés cuenta? Registrate</button><p class="form-message" id="auth-message" role="alert" aria-live="polite"></p></dialog><div class="toast" id="toast" role="status"></div>
 </body>
 </html>
