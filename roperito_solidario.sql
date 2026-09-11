@@ -54,5 +54,8 @@ CREATE TABLE IF NOT EXISTS solicitudes (
   CONSTRAINT fk_solicitudes_prenda FOREIGN KEY (prenda_id) REFERENCES prendas(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
--- Promover un administrador inicial después de registrarlo:
--- UPDATE usuarios SET rol = 'admin', estado_aprobacion = 1 WHERE email = 'admin@roperito.local';
+DELETE FROM solicitudes;
+DELETE FROM usuarios;
+
+INSERT INTO usuarios (id, nombre, email, password_hash, rol, estado_aprobacion)
+VALUES (1, 'Luca', 'luk.videla09@gmail.com', '$2b$12$0YZPikEbmV1q2LaUtiT05O92buuSFsFe5wHO6Mm8/yV7bpAi3DdWu', 'admin', 1);

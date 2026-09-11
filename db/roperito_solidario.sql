@@ -64,7 +64,8 @@ CREATE TABLE `usuarios` (
   `nombre` varchar(120) NOT NULL,
   `email` varchar(190) NOT NULL,
   `password_hash` varchar(255) NOT NULL,
-  `rol` enum('admin','usuario') NOT NULL DEFAULT 'usuario',
+  `rol` enum('admin','solicitante') NOT NULL DEFAULT 'solicitante',
+  `estado_aprobacion` tinyint(3) UNSIGNED NOT NULL DEFAULT 1,
   `creado_en` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -72,8 +73,8 @@ CREATE TABLE `usuarios` (
 -- Volcado de datos para la tabla `usuarios`
 --
 
-INSERT INTO `usuarios` (`id`, `nombre`, `email`, `password_hash`, `rol`, `creado_en`) VALUES
-(1, 'Luca', 'luk.videla09@gmail.com', '$2b$12$kTTdJTwpR8s5ZO76.dVDG.jXozWIAj3ER72mXNzdjw1IM9T49q8Bu', 'usuario', '2026-09-11 12:40:49');
+INSERT INTO `usuarios` (`id`, `nombre`, `email`, `password_hash`, `rol`, `estado_aprobacion`, `creado_en`) VALUES
+(1, 'Luca', 'luk.videla09@gmail.com', '$2b$12$0YZPikEbmV1q2LaUtiT05O92buuSFsFe5wHO6Mm8/yV7bpAi3DdWu', 'admin', 1, '2026-09-11 12:40:49');
 
 --
 -- Índices para tablas volcadas
