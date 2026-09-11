@@ -1,7 +1,8 @@
 import { Router } from 'express';
+import type { ResultSetHeader } from 'mysql2/promise';
 import { z } from 'zod';
 import { pool } from '../db';
-import { authenticate } from '../middleware/auth';
+import { authenticate, requireAdmin } from '../middleware/auth';
 import { uploadImage } from '../middleware/upload';
 import type { AuthRequest } from '../types';
 
@@ -20,11 +21,11 @@ router.get('/', async (_request, response, next) => {
   } catch (error) { next(error); }
 });
 
-router.post('/', authenticate, uploadImage, async (request: AuthRequest, response, next) => {
+router.post('/', authenticate, requireAdmin, uploadImage, async (request: AuthRequest, response, next) => {
   try {
     const data = garmentData.parse(request.body);
     const imagePath = request.file ? `/uploads/${request.file.filename}` : null;
-    const [result] = await pool.execute<mysql.ResultSetHeader>(
+    const [result] = await pool.execute<ResultSetHeader>(
       'INSERT INTO prendas (nombre, categoria, talle, estado, ruta_imagen) VALUES (?, ?, ?, ?, ?)',
       [data.nombre, data.categoria, data.talle, data.estado, imagePath]
     );
@@ -39,7 +40,7 @@ router.post('/:id/solicitar', authenticate, async (request: AuthRequest, respons
   try {
     const garmentId = z.coerce.number().int().positive().parse(request.params.id);
     const mensaje = z.string().trim().max(500).optional().parse(request.body?.mensaje);
-    const [result] = await pool.execute<mysql.ResultSetHeader>(
+    const [result] = await pool.execute<ResultSetHeader>(
       'INSERT INTO solicitudes (usuario_id, prenda_id, mensaje) SELECT ?, id, ? FROM prendas WHERE id = ? AND disponible = TRUE',
       [request.user!.id, mensaje ?? null, garmentId]
     );

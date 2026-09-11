@@ -26,7 +26,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/prendas', garmentRoutes);
 app.use('/api/admin', adminRoutes);
 app.get('/api/health', (_request, response) => response.json({ status: 'ok' }));
-app.get('*', (_request, response) => response.sendFile('index.html', { root: 'public' }));
+app.get('/{*splat}', (_request, response) => response.sendFile('index.html', { root: 'public' }));
 app.use(errorHandler);
 
 checkDatabase().then(() => {

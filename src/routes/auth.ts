@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import bcrypt from 'bcrypt';
+import type { ResultSetHeader, RowDataPacket } from 'mysql2/promise';
 import { z } from 'zod';
 import { pool } from '../db';
 import { authenticate, clearAuthCookie, issueAuthCookie } from '../middleware/auth';
@@ -17,7 +18,7 @@ router.post('/register', async (request, response, next) => {
   try {
     const data = credentials.parse(request.body);
     const passwordHash = await bcrypt.hash(data.password, 12);
-    const [result] = await pool.execute<mysql.ResultSetHeader>(
+    const [result] = await pool.execute<ResultSetHeader>(
       'INSERT INTO usuarios (nombre, email, password_hash) VALUES (?, ?, ?)',
       [data.nombre, data.email, passwordHash]
     );
@@ -34,7 +35,7 @@ router.post('/register', async (request, response, next) => {
 router.post('/login', async (request, response, next) => {
   try {
     const data = loginCredentials.parse(request.body);
-    const [rows] = await pool.execute<mysql.RowDataPacket[]>(
+    const [rows] = await pool.execute<RowDataPacket[]>(
       'SELECT id, nombre, email, password_hash, rol FROM usuarios WHERE email = ? LIMIT 1', [data.email]
     );
     const record = rows[0];
