@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Panel de aprobación de administradores.">
+  <title>Solicitudes de administración | Roperito Solidario</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script type="module" src="/js/admin.js" defer></script>
+</head>
+<body class="admin-page">
+  <header class="site-header"><a class="brand" href="/"><span class="brand-mark">RS</span><span>Roperito<br><strong>Solidario</strong></span></a><a class="button button-ghost" href="/">Volver al catálogo</a></header>
+  <main class="admin-shell">
+    <p class="eyebrow">Panel de gestión</p><h1>Solicitudes de administración</h1><p class="section-intro">Revisá quién puede ayudar a cuidar esta red.</p>
+    <p class="form-message" id="admin-message" role="status" aria-live="polite"></p>
+    <div class="admin-table-wrap"><table class="admin-table"><caption class="sr-only">Solicitudes pendientes de administradores</caption><thead><tr><th>Nombre</th><th>Email</th><th>Fecha</th><th>Acciones</th></tr></thead><tbody id="admin-requests"></tbody></table></div>
+  </main>
+</body>
+</html>

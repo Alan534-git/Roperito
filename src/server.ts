@@ -25,6 +25,7 @@ app.use(morgan(config.nodeEnv === 'production' ? 'combined' : 'dev'));
 app.use('/uploads', express.static(config.uploadDir, { maxAge: '1d' }));
 app.use(express.static('public'));
 app.use('/api/auth', authRoutes);
+app.use('/api', authRoutes);
 app.use('/api/prendas', garmentRoutes);
 app.use('/api/admin', adminRoutes);
 app.get('/api/health', (_request, response) => response.json({ status: 'ok' }));

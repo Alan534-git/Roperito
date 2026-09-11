@@ -7,8 +7,9 @@ import { pool } from '../db';
 
 const COOKIE_NAME = 'roperito_token';
 
-export function issueAuthCookie(response: Response, user: AuthUser): void {
-  const token = jwt.sign(user, config.jwtSecret, { expiresIn: '8h' });
+export function issueToken(user: AuthUser): string { return jwt.sign(user, config.jwtSecret, { expiresIn: '8h' }); }
+
+export function issueAuthCookie(response: Response, token: string): void {
   response.cookie(COOKIE_NAME, token, {
     httpOnly: true,
     secure: config.nodeEnv === 'production',
@@ -48,7 +49,8 @@ export async function requireAdmin(request: AuthRequest, response: Response, nex
   try {
     const [rows] = await pool.execute<RowDataPacket[]>('SELECT rol FROM usuarios WHERE id = ? LIMIT 1', [request.user!.id]);
     const role = rows[0]?.rol as string | undefined;
-    if (role !== 'admin') {
+    const approval = rows[0]?.estado_aprobacion as number | undefined;
+    if (role !== 'admin' || approval !== 1) {
       response.status(403).json({ error: 'Esta acción requiere permisos de administrador.' });
       return;
     }

@@ -1,3 +1,5 @@
+export {};
+
 interface Garment { id: number; nombre: string; categoria: string; talle: string; estado: string; ruta_imagen: string | null; disponible: boolean }
 interface User { id: number; nombre: string; email: string; rol: 'admin' | 'usuario' }
 interface RequestItem { id: number; estado: 'pendiente' | 'aprobada' | 'rechazada'; mensaje: string | null; usuario_nombre: string; usuario_email: string; prenda_nombre: string }

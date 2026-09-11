@@ -3,9 +3,13 @@ import type { ResultSetHeader, RowDataPacket } from 'mysql2/promise';
 import { z } from 'zod';
 import { pool } from '../db';
 import { authenticate, requireAdmin } from '../middleware/auth';
+import { requireApprovedAdmin } from '../middleware/auth.middleware';
+import { listAdminRequests, processAdminRequest } from '../controllers/admin.controller';
 
 const router = Router();
 router.use(authenticate, requireAdmin);
+router.get('/requests', requireApprovedAdmin, listAdminRequests);
+router.post('/request', requireApprovedAdmin, processAdminRequest);
 
 router.get('/solicitudes', async (_request, response, next) => {
   try {

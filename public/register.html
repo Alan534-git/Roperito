@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Registrate en Roperito Solidario.">
+  <title>Crear cuenta | Roperito Solidario</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script type="module" src="/js/register.js" defer></script>
+</head>
+<body class="auth-page">
+  <main class="auth-shell">
+    <a class="auth-back" href="/">← Volver al catálogo</a>
+    <section class="auth-card" aria-labelledby="register-title">
+      <a class="footer-brand" href="/"><span class="brand-mark">RS</span><span>Roperito<br>Solidario</span></a>
+      <p class="eyebrow">Tu espacio</p>
+      <h1 id="register-title">Crear una cuenta</h1>
+      <p class="auth-description">Elegí cómo querés participar de esta red.</p>
+      <form id="register-form">
+        <label>Nombre completo<input name="nombre" autocomplete="name" required minlength="2" maxlength="120"></label>
+        <label>Email<input name="email" type="email" autocomplete="email" required maxlength="190"></label>
+        <label>Contraseña<input name="password" type="password" autocomplete="new-password" required minlength="8" maxlength="72"></label>
+        <fieldset class="role-options"><legend>Tipo de cuenta</legend><label><input type="radio" name="rol" value="solicitante" checked> Solicitante</label><label><input type="radio" name="rol" value="admin"> Administrador</label></fieldset>
+        <button class="button button-accent" id="register-submit" type="submit">Crear cuenta <span>↗</span></button>
+      </form>
+      <p class="form-message" id="register-message" role="status" aria-live="polite"></p>
+      <a class="auth-switch" href="/">Ya tengo una cuenta</a>
+    </section>
+  </main>
+</body>
+</html>
